@@ -3,23 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Qeyko Crypto - Mining App</title>
+    <title>Qeyko Crypto - Official Mining</title>
     <style>
-        body { background: #9c126d; font-family: 'Segoe UI', sans-serif; color: white; margin: 0; padding: 15px; }
+        body { background: #9c126d; font-family: 'Segoe UI', sans-serif; color: white; margin: 0; padding: 15px; padding-bottom: 50px; }
         .header { text-align: center; margin-bottom: 20px; }
-        .balance-box { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2); }
-        .action-buttons { display: flex; justify-content: space-around; margin-top: 15px; gap: 10px; }
-        .btn-action { flex: 1; border: none; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 11px; text-transform: uppercase; }
+        .balance-box { background: rgba(255,255,255,0.1); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.3); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        
+        .action-buttons { display: flex; justify-content: space-around; margin-top: 20px; gap: 8px; }
+        .btn-action { flex: 1; border: none; padding: 12px 5px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 10px; text-transform: uppercase; transition: 0.3s; }
         .btn-depot { background: #27ae60; color: white; }
         .btn-retrait { background: #f1c40f; color: #333; }
         .btn-invite { background: #3498db; color: white; }
-        .bonus-box { background: #f39c12; color: white; padding: 10px; border-radius: 8px; margin: 15px 0; font-size: 13px; text-align: center; font-weight: bold; }
-        .card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; color: #333; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
-        .name { font-weight: bold; color: #9c126d; font-size: 16px; }
-        .profit { color: #27ae60; font-size: 12px; font-weight: bold; }
-        .price { font-weight: bold; font-size: 15px; margin-bottom: 5px; }
-        .btn-miner { background: #9c126d; color: white; border: none; padding: 8px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; }
-        .locked { background: #bdc3c7 !important; cursor: not-allowed; }
+
+        .bonus-box { background: linear-gradient(90deg, #f39c12, #e67e22); color: white; padding: 12px; border-radius: 10px; margin: 20px 0; font-size: 13px; text-align: center; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+
+        .card { background: white; border-radius: 15px; padding: 18px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; color: #333; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-left: 5px solid #9c126d; }
+        .vip-info { flex: 1; }
+        .name { font-weight: bold; color: #9c126d; font-size: 18px; margin-bottom: 3px; }
+        .profit { color: #27ae60; font-size: 13px; font-weight: bold; }
+        .vip-action { text-align: right; }
+        .price { font-weight: 800; font-size: 16px; color: #2c3e50; margin-bottom: 8px; }
+        .btn-miner { background: #9c126d; color: white; border: none; padding: 10px 20px; border-radius: 25px; font-weight: bold; cursor: pointer; font-size: 12px; }
+        .locked { background: #bdc3c7 !important; cursor: not-allowed; color: #7f8c8d; }
     </style>
 </head>
 <body>
@@ -27,8 +32,9 @@
     <div class="header">
         <h1>Qeyko Crypto 🚀</h1>
         <div class="balance-box">
-            <small>Solde Actuel</small>
-            <h2 id="user-balance">0.00 USDT</h2>
+            <small style="opacity: 0.8;">SOLDE ACTUEL</small>
+            <h2 id="user-balance" style="font-size: 32px; margin: 10px 0;">0.00 USDT</h2>
+            
             <div class="action-buttons">
                 <button class="btn-action btn-depot" onclick="showDepot()">📥 Dépôt</button>
                 <button class="btn-action btn-retrait" onclick="startWithdraw()">📤 Retirer</button>
@@ -38,27 +44,45 @@
     </div>
 
     <div class="bonus-box">
-        🎁 Bonus: Gagnez 10% sur chaque dépôt de vos amis !
+        🎁 BONUS PARRAINAGE: Recevez 10% sur chaque dépôt de vos amis !
     </div>
 
     <div id="vip-container">
         <div class="card">
-            <div><div class="name">VIP 1</div><div class="profit">+$1.00 / jour</div></div>
-            <div style="text-align: right;"><div class="price">$6.00</div><button class="btn-miner" onclick="activateVIP(1)">MINER</button></div>
+            <div class="vip-info"><div class="name">VIP 1</div><div class="profit">+$1.00 / jour</div></div>
+            <div class="vip-action"><div class="price">$6.00</div><button class="btn-miner" onclick="activateVIP(1)">MINER</button></div>
         </div>
-        <div class="card" style="border: 2px solid #9c126d;">
-            <div><div class="name">VIP 7 🔥</div><div class="profit">+$14.00 / jour</div></div>
-            <div style="text-align: right;"><div class="price">$60.00</div><button class="btn-miner" onclick="activateVIP(7)">MINER</button></div>
+        <div class="card">
+            <div class="vip-info"><div class="name">VIP 2</div><div class="profit">+$2.50 / jour</div></div>
+            <div class="vip-action"><div class="price">$12.00</div><button class="btn-miner" onclick="activateVIP(2)">MINER</button></div>
         </div>
-
-        <div class="card" style="opacity: 0.7;">
-            <div><div class="name">VIP 8 🔒</div><div class="profit">Bientôt disponible</div></div>
-            <div style="text-align: right;"><div class="price">$150.00</div><button class="btn-miner locked">LOCKED</button></div>
+        <div class="card">
+            <div class="vip-info"><div class="name">VIP 3</div><div class="profit">+$4.00 / jour</div></div>
+            <div class="vip-action"><div class="price">$20.00</div><button class="btn-miner" onclick="activateVIP(3)">MINER</button></div>
         </div>
-
-        <div class="card" style="opacity: 0.7;">
-            <div><div class="name">VIP 9 🔒</div><div class="profit">Bientôt disponible</div></div>
-            <div style="text-align: right;"><div class="price">$300.00</div><button class="btn-miner locked">LOCKED</button></div>
+        <div class="card">
+            <div class="vip-info"><div class="name">VIP 4</div><div class="profit">+$5.50 / jour</div></div>
+            <div class="vip-action"><div class="price">$25.00</div><button class="btn-miner" onclick="activateVIP(4)">MINER</button></div>
+        </div>
+        <div class="card">
+            <div class="vip-info"><div class="name">VIP 5</div><div class="profit">+$6.20 / jour</div></div>
+            <div class="vip-action"><div class="price">$28.00</div><button class="btn-miner" onclick="activateVIP(5)">MINER</button></div>
+        </div>
+        <div class="card">
+            <div class="vip-info"><div class="name">VIP 6 🚀</div><div class="profit">+$7.00 / jour</div></div>
+            <div class="vip-action"><div class="price">$30.00</div><button class="btn-miner" onclick="activateVIP(6)">MINER</button></div>
+        </div>
+        <div class="card" style="border: 2px solid gold;">
+            <div class="vip-info"><div class="name">VIP 7 🔥</div><div class="profit">+$14.00 / jour</div></div>
+            <div class="vip-action"><div class="price">$60.00</div><button class="btn-miner" onclick="activateVIP(7)">MINER</button></div>
+        </div>
+        <div class="card" style="opacity: 0.8; background: #ecf0f1;">
+            <div class="vip-info"><div class="name" style="color:#7f8c8d">VIP 8 🔒</div><div class="profit" style="color:#7f8c8d">Bientôt disponible...</div></div>
+            <div class="vip-action"><div class="price">$ ???</div><button class="btn-miner locked">LOCKED</button></div>
+        </div>
+        <div class="card" style="opacity: 0.8; background: #ecf0f1;">
+            <div class="vip-info"><div class="name" style="color:#7f8c8d">VIP 9 🔒</div><div class="profit" style="color:#7f8c8d">Bientôt disponible...</div></div>
+            <div class="vip-action"><div class="price">$ ???</div><button class="btn-miner locked">LOCKED</button></div>
         </div>
     </div>
 
@@ -70,28 +94,33 @@
         };
 
         function showDepot() {
-            alert("📥 ADRESSE DE DÉPÔT (BEP20):\n\n" + config.adminWallet + "\n\nCopiez l'adresse et envoyez vos USDT. Contactez l'admin avec la preuve.");
+            alert("📥 DÉPÔT USDT (BEP20)\n\nEnvoyez vos fonds à cette adresse :\n" + config.adminWallet + "\n\nUne fois le transfert effectué, envoyez la capture d'écran au bot pour validation.");
         }
 
         function showInvite() {
-            alert("👥 PARRAINAGE:\n\nCopiez votre lien dans le bot. Vous recevez 10% de bonus sur chaque investissement de vos filleuls !");
+            alert("👥 PARRAINAGE\n\nPartagez votre lien de parrainage du bot. Vous gagnez 10% de bonus sur chaque investissement de vos amis !");
         }
 
         function startWithdraw() {
             if (!config.retraitOuvert) {
-                alert("⚠️ Les retraits sont suspendus pour maintenance.");
+                alert("⚠️ Maintenance : Les retraits sont suspendus pour 24h.");
                 return;
             }
-            let code = prompt("🔒 Sécurité: Entrez votre code de retrait (4 chiffres) :");
+            let code = prompt("🔒 SÉCURITÉ : Entrez votre code de retrait secret (4 chiffres) :");
             if (code && code.length >= 4) {
-                let mnt = prompt("Montant (Minimum $5) :");
-                if (parseFloat(mnt) >= 5) alert("✅ Demande envoyée !");
-                else alert("❌ Montant insuffisant.");
+                let mnt = prompt("Montant à retirer (Minimum $5.00) :");
+                if (parseFloat(mnt) >= config.minRetrait) {
+                    alert("✅ Demande envoyée ! Le montant de $" + mnt + " sera validé par l'admin.");
+                } else {
+                    alert("❌ Le montant minimum est de $5.00");
+                }
+            } else if (code !== null) {
+                alert("❌ Code invalide.");
             }
         }
 
         function activateVIP(id) {
-            alert("🚀 Activation VIP " + id + " en cours...");
+            alert("🚀 Activation VIP " + id + "...\nVérification de votre solde en cours.");
         }
     </script>
 </body>
