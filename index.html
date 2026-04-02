@@ -1,89 +1,97 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Qeyko Crypto Mining</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Qeyko Mining App</title>
     <style>
-        /* --- STYLE JENERAL --- */
-        body { background: #9c126d; font-family: 'Segoe UI', sans-serif; color: white; margin: 0; padding: 15px; padding-bottom: 50px; }
-        .header { text-align: center; margin-bottom: 20px; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background: #9c126d !important; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: white; margin: 0; padding: 15px; text-align: center; }
         
-        /* --- BOX BALANS LAN --- */
-        .balance-box { background: rgba(255,255,255,0.15); padding: 25px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.3); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }
-        .action-buttons { display: flex; justify-content: space-around; gap: 10px; margin-top: 15px; }
-        .btn-action { flex: 1; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 11px; text-transform: uppercase; }
-        .btn-depot { background: #27ae60; color: white; }
-        .btn-retrait { background: #f1c40f; color: #333; }
-        .btn-invite { background: #3498db; color: white; }
+        .balance-box { background: rgba(255,255,255,0.15); padding: 25px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.3); margin: 10px 0 20px 0; }
+        .btn-group { display: flex; justify-content: space-around; gap: 8px; margin-top: 15px; }
+        .btn-action { flex: 1; border: none; padding: 12px 5px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 10px; text-transform: uppercase; color: white; }
         
-        /* --- KAT VIP YO --- */
-        .card { background: white; border-radius: 20px; padding: 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; color: #333; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-left: 5px solid #9c126d; }
-        .name { font-weight: bold; color: #9c126d; font-size: 18px; }
-        .profit { color: #27ae60; font-size: 13px; font-weight: bold; }
-        .btn-miner { background: #9c126d; color: white; border: none; padding: 10px 20px; border-radius: 25px; font-weight: bold; cursor: pointer; font-size: 12px; }
+        .bonus-tag { background: linear-gradient(90deg, #f39c12, #e67e22); color: white; padding: 12px; border-radius: 12px; margin: 20px 0; font-size: 12px; font-weight: bold; }
 
-        /* --- MODAL (POPUP) --- */
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; box-sizing: border-box; }
-        .modal-content { background: white; color: #333; padding: 25px; border-radius: 25px; width: 100%; max-width: 400px; text-align: center; animation: slideUp 0.3s ease; }
-        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .modal-btn { border: none; padding: 12px; border-radius: 10px; width: 100%; margin-top: 10px; font-weight: bold; cursor: pointer; display: block; text-decoration: none; font-size: 14px; }
+        .vip-list { display: flex; flex-direction: column; gap: 12px; padding-bottom: 30px; }
+        .vip-card { background: white; border-radius: 20px; padding: 18px; display: flex; justify-content: space-between; align-items: center; color: #333; text-align: left; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-left: 6px solid #9c126d; }
+        .vip-name { font-weight: bold; color: #9c126d; font-size: 18px; }
+        .vip-profit { color: #27ae60; font-size: 13px; font-weight: bold; }
+        .vip-price { font-weight: 800; font-size: 17px; color: #2c3e50; margin-bottom: 4px; text-align: right; }
+        .btn-miner { background: #9c126d; color: white; border: none; padding: 10px 20px; border-radius: 25px; font-weight: bold; font-size: 12px; }
+
+        /* MODALS */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 10000; padding: 20px; }
+        .modal-box { background: white; color: #333; padding: 25px; border-radius: 25px; width: 100%; max-width: 400px; }
+        .wallet-display { background: #f4f4f4; padding: 12px; border-radius: 10px; word-break: break-all; font-family: monospace; font-weight: bold; margin: 15px 0; border: 1px dashed #9c126d; font-size: 13px; }
+        .modal-btn { border: none; padding: 14px; border-radius: 12px; width: 100%; margin-top: 10px; font-weight: bold; cursor: pointer; display: block; text-decoration: none; text-align: center; font-size: 14px; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>Qeyko Crypto 🚀</h1>
-        <div class="balance-box">
-            <small style="letter-spacing: 1px; opacity: 0.8;">SOLDE ACTUEL</small>
-            <h1 style="font-size: 38px; margin: 10px 0;">0.00 USDT</h1>
-            <div class="action-buttons">
-                <button class="btn-action btn-depot" onclick="openModal('modal-depot')">📥 Dépôt</button>
-                <button class="btn-action btn-retrait" onclick="alert('Demande de retrait via le Bot')">📤 Retrait</button>
-                <button class="btn-action btn-invite" onclick="alert('Lien de parrainage dans le Bot')">👥 Inviter</button>
-            </div>
+    <h1 style="margin: 10px 0;">Qeyko Crypto 🚀</h1>
+
+    <div class="balance-box">
+        <small style="opacity: 0.8;">SOLDE ACTUEL</small>
+        <h2 style="font-size: 38px; margin: 10px 0;">0.00 USDT</h2>
+        <div class="btn-group">
+            <button class="btn-action" style="background:#27ae60" onclick="openM('m-depot')">📥 Dépôt</button>
+            <button class="btn-action" style="background:#f1c40f; color:#333" onclick="openM('m-retrait')">📤 Retirer</button>
+            <button class="btn-action" style="background:#3498db" onclick="openM('m-invite')">👥 Inviter</button>
         </div>
     </div>
 
-    <div class="card">
-        <div><div class="name">VIP 1</div><div class="profit">+$1.00 / jour</div></div>
-        <div style="text-align:right;"><b>$6.00</b><br><button class="btn-miner" onclick="alert('Solde insuffisant')">MINER</button></div>
-    </div>
-    <div class="card">
-        <div><div class="name">VIP 2</div><div class="profit">+$2.50 / jour</div></div>
-        <div style="text-align:right;"><b>$12.00</b><br><button class="btn-miner" onclick="alert('Solde insuffisant')">MINER</button></div>
+    <div class="bonus-tag">🎁 BONUS: 10% sur les dépôts de vos amis !</div>
+
+    <div class="vip-list">
+        <div class="vip-card"><div><div class="vip-name">VIP 1</div><div class="vip-profit">+$1.00 / jour</div></div><div style="text-align:right;"><div class="vip-price">$6.00</div><button class="btn-miner" onclick="alert('Vérification du solde...')">MINER</button></div></div>
+        <div class="vip-card"><div><div class="vip-name">VIP 2</div><div class="vip-profit">+$2.50 / jour</div></div><div style="text-align:right;"><div class="vip-price">$12.00</div><button class="btn-miner" onclick="alert('Vérification du solde...')">MINER</button></div></div>
+        <div class="vip-card"><div><div class="vip-name">VIP 3</div><div class="vip-profit">+$4.00 / jour</div></div><div style="text-align:right;"><div class="vip-price">$20.00</div><button class="btn-miner" onclick="alert('Vérification du solde...')">MINER</button></div></div>
+        <div class="vip-card"><div><div class="vip-name">VIP 4</div><div class="vip-profit">+$5.50 / jour</div></div><div style="text-align:right;"><div class="vip-price">$25.00</div><button class="btn-miner" onclick="alert('Vérification du solde...')">MINER</button></div></div>
+        <div class="vip-card"><div><div class="vip-name">VIP 5</div><div class="vip-profit">+$6.20 / jour</div></div><div style="text-align:right;"><div class="vip-price">$28.00</div><button class="btn-miner" onclick="alert('Vérification du solde...')">MINER</button></div></div>
+        <div class="vip-card"><div><div class="vip-name">VIP 6 🚀</div><div class="vip-profit">+$7.00 / jour</div></div><div style="text-align:right;"><div class="vip-price">$30.00</div><button class="btn-miner" onclick="alert('Vérification du solde...')">MINER</button></div></div>
+        <div class="vip-card" style="border: 2px solid #f1c40f;"><div><div class="vip-name">VIP 7 🔥</div><div class="vip-profit">+$14.00 / jour</div></div><div style="text-align:right;"><div class="vip-price">$60.00</div><button class="btn-miner" onclick="alert('Vérification du solde...')">MINER</button></div></div>
     </div>
 
-    <div id="modal-depot" class="modal">
-        <div class="modal-content">
-            <h3 style="color:#9c126d; margin-top:0;">📥 DÉPÔT USDT (BEP20)</h3>
-            <p style="font-size:13px; color:#666;">1. Copiez l'adresse ci-dessous :</p>
-            
-            <div id="addr" style="background:#f4f4f4; padding:12px; border-radius:10px; word-break:break-all; font-family:monospace; font-weight:bold; margin:10px 0; border: 1px dashed #9c126d; font-size:13px;">0x7fD50dAAfeA0a8Df3E4860ECC81939fFBaa11396</div>
-            
-            <button onclick="copyAddr()" class="modal-btn" style="background:#27ae60; color:white;">📋 Copier l'adresse</button>
-            
-            <p style="font-size:12px; color:#856404; background:#fff3cd; padding:10px; border-radius:10px; margin-top:15px;">
-                2. Après le transfert, envoyez votre capture d'écran au bot pour validation.
-            </p>
-
+    <div id="m-depot" class="modal-overlay">
+        <div class="modal-box">
+            <h3 style="color:#9c126d; margin:0;">📥 DÉPÔT USDT (BEP20)</h3>
+            <p style="font-size:13px; color:#666; margin-top:10px;">Copiez l'adresse et effectuez le transfert :</p>
+            <div id="wallet" class="wallet-display">0x7fD50dAAfeA0a8Df3E4860ECC81939fFBaa11396</div>
+            <button class="modal-btn" style="background:#27ae60; color:white;" onclick="copyW()">📋 Copier l'adresse</button>
             <a href="https://t.me/QeykoMiningBot" class="modal-btn" style="background:#9c126d; color:white;">🚀 CONFIRMER SUR LE BOT</a>
+            <button class="modal-btn" style="background:#eee; color:#333;" onclick="closeM('m-depot')">Fermer</button>
+        </div>
+    </div>
 
-            <button onclick="closeModal('modal-depot')" class="modal-btn" style="background:#eee; color:#333;">Fermer</button>
+    <div id="m-retrait" class="modal-overlay">
+        <div class="modal-box">
+            <h3 style="color:#9c126d; margin:0;">📤 RETRAIT</h3>
+            <p style="margin:20px 0; font-size:14px;">Le montant minimum est de <b>5.00 USDT</b>. Les retraits se font via le Bot Telegram.</p>
+            <button class="modal-btn" style="background:#9c126d; color:white;" onclick="closeM('m-retrait')">D'accord</button>
+        </div>
+    </div>
+
+    <div id="m-invite" class="modal-overlay">
+        <div class="modal-box">
+            <h3 style="color:#9c126d; margin:0;">👥 PARRAINAGE</h3>
+            <p style="margin:20px 0; font-size:14px;">Utilisez votre lien unique dans le Bot pour inviter vos amis et gagner 10%.</p>
+            <button class="modal-btn" style="background:#9c126d; color:white;" onclick="closeM('m-invite')">Fermer</button>
         </div>
     </div>
 
     <script>
-        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        
-        function copyAddr() {
-            const addrText = document.getElementById('addr').innerText;
-            navigator.clipboard.writeText(addrText).then(() => {
-                alert("✅ Adresse copiée !");
-            });
+        function openM(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeM(id) { document.getElementById(id).style.display = 'none'; }
+        function copyW() {
+            const el = document.createElement('textarea');
+            el.value = document.getElementById('wallet').innerText;
+            document.body.appendChild(el); el.select();
+            document.execCommand('copy'); document.body.removeChild(el);
+            alert("✅ Adresse copiée !");
         }
     </script>
 </body>
 </html>
+
