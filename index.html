@@ -1,21 +1,89 @@
-<div id="modal-depot" class="modal">
-    <div class="modal-content">
-        <h3 style="color:#9c126d">📥 DÉPÔT USDT (BEP20)</h3>
-        <p style="font-size:13px">1. Copiez l'adresse ci-dessous :</p>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qeyko Crypto Mining</title>
+    <style>
+        /* --- STYLE JENERAL --- */
+        body { background: #9c126d; font-family: 'Segoe UI', sans-serif; color: white; margin: 0; padding: 15px; padding-bottom: 50px; }
+        .header { text-align: center; margin-bottom: 20px; }
         
-        <div id="addr" style="background:#f4f4f4; padding:12px; border-radius:10px; word-break:break-all; font-family:monospace; font-weight:bold; margin:10px 0; border: 1px dashed #9c126d;">0x7fD50dAAfeA0a8Df3E4860ECC81939fFBaa11396</div>
+        /* --- BOX BALANS LAN --- */
+        .balance-box { background: rgba(255,255,255,0.15); padding: 25px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.3); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 20px; }
+        .action-buttons { display: flex; justify-content: space-around; gap: 10px; margin-top: 15px; }
+        .btn-action { flex: 1; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 11px; text-transform: uppercase; }
+        .btn-depot { background: #27ae60; color: white; }
+        .btn-retrait { background: #f1c40f; color: #333; }
+        .btn-invite { background: #3498db; color: white; }
         
-        <button onclick="copyAddr()" class="modal-btn" style="background:#27ae60">📋 Copier l'adresse</button>
-        
-        <div style="background: #fff3cd; padding: 10px; border-radius: 10px; margin-top: 15px; border: 1px solid #ffeeba;">
-            <p style="font-size:12px; color:#856404; margin:0;">2. Une fois le transfert effectué, cliquez sur le bouton ci-dessous pour envoyer votre capture d'écran (preuve).</p>
+        /* --- KAT VIP YO --- */
+        .card { background: white; border-radius: 20px; padding: 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; color: #333; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-left: 5px solid #9c126d; }
+        .name { font-weight: bold; color: #9c126d; font-size: 18px; }
+        .profit { color: #27ae60; font-size: 13px; font-weight: bold; }
+        .btn-miner { background: #9c126d; color: white; border: none; padding: 10px 20px; border-radius: 25px; font-weight: bold; cursor: pointer; font-size: 12px; }
+
+        /* --- MODAL (POPUP) --- */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; box-sizing: border-box; }
+        .modal-content { background: white; color: #333; padding: 25px; border-radius: 25px; width: 100%; max-width: 400px; text-align: center; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal-btn { border: none; padding: 12px; border-radius: 10px; width: 100%; margin-top: 10px; font-weight: bold; cursor: pointer; display: block; text-decoration: none; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Qeyko Crypto 🚀</h1>
+        <div class="balance-box">
+            <small style="letter-spacing: 1px; opacity: 0.8;">SOLDE ACTUEL</small>
+            <h1 style="font-size: 38px; margin: 10px 0;">0.00 USDT</h1>
+            <div class="action-buttons">
+                <button class="btn-action btn-depot" onclick="openModal('modal-depot')">📥 Dépôt</button>
+                <button class="btn-action btn-retrait" onclick="alert('Demande de retrait via le Bot')">📤 Retrait</button>
+                <button class="btn-action btn-invite" onclick="alert('Lien de parrainage dans le Bot')">👥 Inviter</button>
+            </div>
         </div>
-
-        <a href="https://t.me/QeykoMiningBot" style="text-decoration: none;">
-            <button class="modal-btn" style="background:#9c126d; margin-top:15px;">🚀 CONFIRMER LE TRANSFERT</button>
-        </a>
-
-        <button onclick="closeModal('modal-depot')" class="modal-btn" style="background:#ccc; margin-top:10px;">Fermer</button>
     </div>
-</div>
 
+    <div class="card">
+        <div><div class="name">VIP 1</div><div class="profit">+$1.00 / jour</div></div>
+        <div style="text-align:right;"><b>$6.00</b><br><button class="btn-miner" onclick="alert('Solde insuffisant')">MINER</button></div>
+    </div>
+    <div class="card">
+        <div><div class="name">VIP 2</div><div class="profit">+$2.50 / jour</div></div>
+        <div style="text-align:right;"><b>$12.00</b><br><button class="btn-miner" onclick="alert('Solde insuffisant')">MINER</button></div>
+    </div>
+
+    <div id="modal-depot" class="modal">
+        <div class="modal-content">
+            <h3 style="color:#9c126d; margin-top:0;">📥 DÉPÔT USDT (BEP20)</h3>
+            <p style="font-size:13px; color:#666;">1. Copiez l'adresse ci-dessous :</p>
+            
+            <div id="addr" style="background:#f4f4f4; padding:12px; border-radius:10px; word-break:break-all; font-family:monospace; font-weight:bold; margin:10px 0; border: 1px dashed #9c126d; font-size:13px;">0x7fD50dAAfeA0a8Df3E4860ECC81939fFBaa11396</div>
+            
+            <button onclick="copyAddr()" class="modal-btn" style="background:#27ae60; color:white;">📋 Copier l'adresse</button>
+            
+            <p style="font-size:12px; color:#856404; background:#fff3cd; padding:10px; border-radius:10px; margin-top:15px;">
+                2. Après le transfert, envoyez votre capture d'écran au bot pour validation.
+            </p>
+
+            <a href="https://t.me/QeykoMiningBot" class="modal-btn" style="background:#9c126d; color:white;">🚀 CONFIRMER SUR LE BOT</a>
+
+            <button onclick="closeModal('modal-depot')" class="modal-btn" style="background:#eee; color:#333;">Fermer</button>
+        </div>
+    </div>
+
+    <script>
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        
+        function copyAddr() {
+            const addrText = document.getElementById('addr').innerText;
+            navigator.clipboard.writeText(addrText).then(() => {
+                alert("✅ Adresse copiée !");
+            });
+        }
+    </script>
+</body>
+</html>
