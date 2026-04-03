@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -13,34 +12,35 @@
         }
         .balance-box { 
             background: linear-gradient(145deg, #9c126d, #6a0b4a); 
-            padding: 30px 20px; border-radius: 25px; margin-bottom: 20px;
+            padding: 30px 20px; border-radius: 25px; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.5);
         }
         .btn-group { display: flex; gap: 8px; margin-top: 15px; }
-        .btn-main { flex: 1; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; color: white; }
+        .btn-main { flex: 1; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; color: white; font-size: 13px; }
         
-        /* Formulaire Style (Depot/Retrait) */
+        /* Modal Style (Full Screen Form) */
         .modal-overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: #fff; display: none; flex-direction: column; z-index: 1000; color: #333; padding: 20px;
         }
-        .form-header { display: flex; align-items: center; margin-bottom: 20px; }
-        .back-btn { font-size: 24px; cursor: pointer; margin-right: 15px; }
+        .form-header { display: flex; align-items: center; margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .back-btn { font-size: 24px; cursor: pointer; margin-right: 15px; color: #9c126d; }
         .network-selector { display: flex; gap: 10px; margin: 15px 0; }
-        .net-btn { border: 1px solid #ddd; padding: 10px; border-radius: 8px; flex: 1; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 5px; }
-        .net-btn.active { border: 2px solid #f39c12; background: #fff9f0; color: #e67e22; }
-        .input-group { text-align: left; margin-bottom: 15px; }
-        .input-group label { font-weight: bold; display: block; margin-bottom: 5px; font-size: 14px; }
-        .input-field { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #eee; background: #f9f9f9; font-size: 14px; }
-        .confirm-btn { width: 100%; padding: 15px; background: #f39c12; color: white; border: none; border-radius: 30px; font-weight: bold; font-size: 16px; margin-top: 20px; }
+        .net-btn { border: 2px solid #f39c12; background: #fff9f0; color: #e67e22; padding: 12px; border-radius: 10px; flex: 1; font-weight: bold; text-align: center; }
+        .input-group { text-align: left; margin-bottom: 20px; }
+        .input-group label { font-weight: bold; display: block; margin-bottom: 8px; font-size: 14px; color: #555; }
+        .input-field { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #ddd; background: #f9f9f9; font-size: 14px; outline: none; }
+        .confirm-btn { width: 100%; padding: 18px; background: #9c126d; color: white; border: none; border-radius: 30px; font-weight: bold; font-size: 16px; margin-top: 10px; cursor: pointer; }
 
         /* VIP Cards */
-        .vip-card { background: white; border-radius: 20px; padding: 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; color: #333; text-align: left; }
-        .btn-miner { background: #9c126d; color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; }
+        .vip-list { margin-top: 10px; }
+        .vip-card { background: white; border-radius: 20px; padding: 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; color: #333; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .vip-info b { font-size: 18px; color: #9c126d; }
+        .btn-miner { background: #9c126d; color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; }
 
-        /* Navigation */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
-        .nav-item { color: #666; font-size: 11px; cursor: pointer; }
-        .nav-item.active { color: #f1c40f; }
+        /* Bottom Nav */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; z-index: 500; }
+        .nav-item { color: #666; font-size: 11px; cursor: pointer; text-align: center; }
+        .nav-item.active { color: #f1c40f; font-weight: bold; }
         .page { display: none; }
         .page.active { display: block; }
     </style>
@@ -48,78 +48,89 @@
 <body>
 
     <div id="page-mine" class="page active">
-        <h3 id="app-title">Qeyko Mining 🚀</h3>
+        <h3 style="margin-top: 0;">Qeyko Crypto 🚀</h3>
         <div class="balance-box">
-            <small>SOLDE ACTUEL (PROFIT)</small>
-            <h2 id="balance">0.00 USDT</h2>
+            <small style="opacity: 0.8;">SOLDE ACTUEL (PROFIT)</small>
+            <h2 id="balance" style="font-size: 36px; margin: 10px 0;">0.00 USDT</h2>
             <div class="btn-group">
                 <button class="btn-main" style="background:#27ae60;" onclick="openForm('m-depot')">📥 DÉPÔT</button>
                 <button class="btn-main" style="background:#f1c40f; color:#333;" onclick="openForm('m-retrait')">📤 RETRAIT</button>
                 <button class="btn-main" style="background:#3498db;" onclick="showPage('page-squad')">👥 INVITER</button>
             </div>
         </div>
-        <div id="vip-list">
-            <div class="vip-card"><div><b>VIP 1</b><p style="color:#27ae60; margin:0;">+1.00 USDT / 24h</p></div><div style="text-align:right"><b>$6.00</b><br><button class="btn-miner">MINER</button></div></div>
-            <div class="vip-card"><div><b>VIP 2</b><p style="color:#27ae60; margin:0;">+2.50 USDT / 24h</p></div><div style="text-align:right"><b>$12.00</b><br><button class="btn-miner">MINER</button></div></div>
-            <div class="vip-card"><div><b>VIP 3</b><p style="color:#27ae60; margin:0;">+4.00 USDT / 24h</p></div><div style="text-align:right"><b>$20.00</b><br><button class="btn-miner">MINER</button></div></div>
+
+        <div class="vip-list">
+            <div class="vip-card"><div><b>VIP 1</b><p style="color:#27ae60; margin:0;">+1.00 USDT / 24h</p></div><div style="text-align:right"><b>$6.00</b><br><button class="btn-miner" onclick="buyVIP(1)">MINER</button></div></div>
+            <div class="vip-card"><div><b>VIP 2</b><p style="color:#27ae60; margin:0;">+2.50 USDT / 24h</p></div><div style="text-align:right"><b>$12.00</b><br><button class="btn-miner" onclick="buyVIP(2)">MINER</button></div></div>
+            <div class="vip-card"><div><b>VIP 3</b><p style="color:#27ae60; margin:0;">+4.00 USDT / 24h</p></div><div style="text-align:right"><b>$20.00</b><br><button class="btn-miner" onclick="buyVIP(3)">MINER</button></div></div>
+            <div class="vip-card"><div><b>VIP 4</b><p style="color:#27ae60; margin:0;">+5.50 USDT / 24h</p></div><div style="text-align:right"><b>$25.00</b><br><button class="btn-miner" onclick="buyVIP(4)">MINER</button></div></div>
         </div>
     </div>
 
     <div id="m-depot" class="modal-overlay">
-        <div class="form-header"><span class="back-btn" onclick="closeForm('m-depot')">❮</span><h3 style="margin:0">Dépôt</h3></div>
-        <div class="input-group">
-            <label>Choisissez le réseau principal</label>
-            <div class="network-selector"><div class="net-btn active">🟡 BEP20-USDT</div></div>
-        </div>
+        <div class="form-header"><span class="back-btn" onclick="closeForm('m-depot')">❮</span><h3 style="margin:0">Dépôt USDT</h3></div>
+        <div class="input-group"><label>Réseau principal</label><div class="net-btn">🟡 BEP20-USDT</div></div>
         <div class="input-group">
             <label>Adresse de dépôt</label>
-            <input type="text" class="input-field" value="0x7fD50dAAfeA0a8Df3E4860ECC81939fFBaa11396" readonly id="addr">
-            <button onclick="copyAddr()" style="border:none; background:none; color:#f39c12; font-weight:bold; margin-top:5px; cursor:pointer;">Copier l'adresse</button>
+            <input type="text" class="input-field" value="0x7fD50dAAfeA0a8Df3E4860ECC81939fFBaa11396" id="addr" readonly>
+            <button onclick="copyAddr()" style="border:none; background:none; color:#9c126d; font-weight:bold; margin-top:8px; cursor:pointer;">📋 Copier l'adresse</button>
         </div>
-        <div class="input-group">
-            <label>Montant du dépôt</label>
-            <input type="number" class="input-field" placeholder="Veuillez saisir le montant">
-        </div>
-        <button class="confirm-btn" onclick="sendProof()">confirmer le dépôt</button>
+        <div class="input-group"><label>Montant envoyé</label><input type="number" id="dep-amt" class="input-field" placeholder="Ex: 10"></div>
+        <button class="confirm-btn" onclick="confirmDepot()">CONFIRMER LE TRANSFERT</button>
     </div>
 
     <div id="m-retrait" class="modal-overlay">
-        <div class="form-header"><span class="back-btn" onclick="closeForm('m-retrait')">❮</span><h3 style="margin:0">Retrait</h3></div>
-        <div class="input-group">
-            <label>Choisissez le réseau principal</label>
-            <div class="network-selector"><div class="net-btn active">🟡 BEP20-USDT</div></div>
-        </div>
-        <div class="input-group">
-            <label>Adresse de retrait</label>
-            <input type="text" class="input-field" placeholder="Veuillez saisir ou coller l'adresse">
-        </div>
-        <div class="input-group">
-            <label>Montant du retrait</label>
-            <input type="number" class="input-field" placeholder="Veuillez saisir le montant">
-            <small style="color:#999;">Solde disponible: 0.00 USDT</small>
-        </div>
-        <button class="confirm-btn" onclick="alert('Retrait automatique envoyé !')">confirmer le retrait</button>
+        <div class="form-header"><span class="back-btn" onclick="closeForm('m-retrait')">❮</span><h3 style="margin:0">Retrait USDT</h3></div>
+        <div class="input-group"><label>Réseau principal</label><div class="net-btn">🟡 BEP20-USDT</div></div>
+        <div class="input-group"><label>Votre adresse BEP20</label><input type="text" id="ret-addr" class="input-field" placeholder="Saisir votre adresse"></div>
+        <div class="input-group"><label>Montant à retirer</label><input type="number" id="ret-amt" class="input-field" placeholder="Min: 1.00 USDT"></div>
+        <button class="confirm-btn" style="background:#f1c40f; color:#333;" onclick="confirmRetrait()">CONFIRMER LE RETRAIT</button>
     </div>
 
-    <div id="page-squad" class="page"><h3>MA SQUAD 👥</h3><p>Invitez et gagnez des bonus.</p></div>
-    <div id="page-history" class="page"><h3>HISTORIQUE 💰</h3><p>Aucune transaction pour le moment.</p></div>
+    <div id="page-squad" class="page"><h3>MA SQUAD 👥</h3><p>Lien: https://t.me/QeykoMiningBot?start=ref123</p></div>
+    <div id="page-history" class="page"><h3>HISTORIQUE 💰</h3><p>Aucune transaction.</p></div>
 
     <nav class="bottom-nav">
-        <div class="nav-item active" onclick="showPage('page-mine')">🏠<br>Maison</div>
-        <div class="nav-item" onclick="showPage('page-squad')">👥<br>Amis</div>
+        <div class="nav-item active" onclick="showPage('page-mine')">🏠<br>Minage</div>
+        <div class="nav-item" onclick="showPage('page-squad')">👥<br>Équipe</div>
         <div class="nav-item" onclick="showPage('page-history')">💰<br>Historique</div>
     </nav>
 
     <script>
+        const botUsername = "QeykoMiningBot"; // Ranpli sa ak non bot ou a si l chanje
+
         function showPage(p) {
             document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
             document.getElementById(p).classList.add('active');
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            event.currentTarget.classList.add('active');
         }
+
         function openForm(id) { document.getElementById(id).style.display = 'flex'; }
         function closeForm(id) { document.getElementById(id).style.display = 'none'; }
-        function copyAddr() { navigator.clipboard.writeText(document.getElementById('addr').value); alert("Copié !"); }
-        function sendProof() { window.location.href = "https://t.me/QeykoMiningBot?start=depot_confirm"; }
+
+        function copyAddr() {
+            document.getElementById('addr').select();
+            document.execCommand('copy');
+            alert("Adresse copiée !");
+        }
+
+        function confirmDepot() {
+            let amt = document.getElementById('dep-amt').value;
+            if(!amt) return alert("Saisir le montant");
+            // Deep link pou voye enfòmasyon bay bot la
+            window.location.href = `https://t.me/${botUsername}?start=depot_${amt}`;
+        }
+
+        function confirmRetrait() {
+            let amt = document.getElementById('ret-amt').value;
+            let adr = document.getElementById('ret-addr').value;
+            if(!amt || !adr) return alert("Remplir tous les champs");
+            window.location.href = `https://t.me/${botUsername}?start=retrait_${amt}_${adr}`;
+        }
+
+        function buyVIP(n) { alert("Solde insuffisant pour VIP " + n); }
     </script>
 </body>
 </html>
+
