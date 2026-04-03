@@ -1,148 +1,53 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Qeyko Mining Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qeyko Crypto Mining</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: #12010d; font-family: 'Segoe UI', sans-serif; color: white; margin: 0; padding: 15px; text-align: center; padding-bottom: 80px; }
-        
-        /* Dashboard */
-        .balance-box { background: linear-gradient(145deg, #9c126d, #6a0b4a); padding: 25px; border-radius: 20px; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        .timer-box { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 12px; font-size: 14px; color: #f1c40f; margin-top: 10px; display: inline-block; font-weight: bold; }
-        
-        /* VIP Cards */
-        .vip-list { margin-top: 15px; }
-        .vip-card { background: white; border-radius: 15px; padding: 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; color: #333; box-shadow: 0 3px 6px rgba(0,0,0,0.1); }
-        .vip-info { text-align: left; }
-        .vip-info b { font-size: 17px; color: #9c126d; }
-        .vip-info p { margin: 2px 0; color: #27ae60; font-weight: bold; font-size: 13px; }
-        .btn-miner { background: #9c126d; color: white; border: none; padding: 10px 18px; border-radius: 20px; font-weight: bold; cursor: pointer; }
-
-        /* Forms */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; display: none; flex-direction: column; z-index: 1000; color: #333; padding: 20px; overflow-y: auto; text-align: left; }
-        .form-header { display: flex; align-items: center; margin-bottom: 20px; font-size: 18px; font-weight: bold; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-        .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; color: #666; }
-        .input-field { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #ddd; background: #f9f9f9; font-size: 14px; outline: none; }
-        .net-btn { border: 2px solid #f39c12; background: #fff9f0; color: #e67e22; padding: 12px; border-radius: 10px; font-weight: bold; display: block; width: 100%; text-align: center; margin-bottom: 15px; }
-        .confirm-btn { width: 100%; padding: 18px; background: #9c126d; color: white; border: none; border-radius: 30px; font-weight: bold; font-size: 16px; margin-top: 10px; cursor: pointer; }
-
-        /* Navigation */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #333; z-index: 500; }
-        .nav-item { color: #666; font-size: 11px; cursor: pointer; text-align: center; }
-        .nav-item.active { color: #f1c40f; font-weight: bold; }
-        .page { display: none; }
-        .page.active { display: block; }
+        body { font-family: Arial, sans-serif; background-color: #12011a; color: white; text-align: center; margin: 0; padding: 20px; }
+        .card { background: #1e0229; border: 1px solid #d48806; border-radius: 15px; padding: 15px; margin-bottom: 15px; }
+        .btn-confirm { background-color: #9c106b; color: white; border: none; padding: 10px 20px; border-radius: 20px; width: 100%; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        input { width: 80%; padding: 10px; border-radius: 10px; border: none; margin-top: 10px; text-align: center; }
+        .locked { opacity: 0.5; border: 1px solid #555; }
     </style>
 </head>
 <body>
 
-    <div id="page-mine" class="page active">
-        <h3 style="margin-top: 0;">Qeyko Mining 🚀</h3>
-        <div class="balance-box">
-            <small>SOLDE ACTUEL (PROFIT)</small>
-            <h2 id="balance">0.00 USDT</h2>
-            <div class="timer-box">⏳ Temps restant: <span id="timer">23:59:59</span></div>
-            <div style="display:flex; gap:10px; margin-top:15px;">
-                <button onclick="openForm('m-depot')" style="flex:1; background:#27ae60; border:none; padding:12px; border-radius:12px; color:white; font-weight:bold;">📥 DÉPÔT</button>
-                <button onclick="openForm('m-retrait')" style="flex:1; background:#f1c40f; border:none; padding:12px; border-radius:12px; color:#333; font-weight:bold;">📤 RETRAIT</button>
-            </div>
-        </div>
+    <h2>💎 Interface de Minage VIP</h2>
 
-        <div class="vip-list">
-            <div class="vip-card"><div class="vip-info"><b>VIP 1</b><p>+1.00 USDT / 24h</p></div><div style="text-align:right"><b>$6.00</b><br><button class="btn-miner" onclick="buy(1)">MINER</button></div></div>
-            <div class="vip-card"><div class="vip-info"><b>VIP 2</b><p>+2.50 USDT / 24h</p></div><div style="text-align:right"><b>$12.00</b><br><button class="btn-miner" onclick="buy(2)">MINER</button></div></div>
-            <div class="vip-card"><div class="vip-info"><b>VIP 3</b><p>+4.00 USDT / 24h</p></div><div style="text-align:right"><b>$20.00</b><br><button class="btn-miner" onclick="buy(3)">MINER</button></div></div>
-            <div class="vip-card"><div class="vip-info"><b>VIP 4</b><p>+5.50 USDT / 24h</p></div><div style="text-align:right"><b>$25.00</b><br><button class="btn-miner" onclick="buy(4)">MINER</button></div></div>
-            <div class="vip-card"><div class="vip-info"><b>VIP 5</b><p>+10.00 USDT / 24h</p></div><div style="text-align:right"><b>$50.00</b><br><button class="btn-miner" onclick="buy(5)">MINER</button></div></div>
-            <div class="vip-card"><div class="vip-info"><b>VIP 6</b><p>+22.00 USDT / 24h</p></div><div style="text-align:right"><b>$100.00</b><br><button class="btn-miner" onclick="buy(6)">MINER</button></div></div>
-            <div class="vip-card" style="border: 2px solid #f1c40f;"><div class="vip-info"><b>VIP 7 🔥</b><p>+50.00 USDT / 24h</p></div><div style="text-align:right"><b>$200.00</b><br><button class="btn-miner" onclick="buy(7)">MINER</button></div></div>
-        </div>
+    <div class="card"><h3>VIP 1</h3><p>Prix: 6 USDT</p><button class="btn-confirm" onclick="openDepot(6)">MINER</button></div>
+    <div class="card"><h3>VIP 2</h3><p>Prix: 10 USDT</p><button class="btn-confirm" onclick="openDepot(10)">MINER</button></div>
+    <div class="card"><h3>VIP 3</h3><p>Prix: 20 USDT</p><button class="btn-confirm" onclick="openDepot(20)">MINER</button></div>
+    <div class="card"><h3>VIP 4</h3><p>Prix: 45 USDT</p><button class="btn-confirm" onclick="openDepot(45)">MINER</button></div>
+    <div class="card"><h3>VIP 5</h3><p>Prix: 80 USDT</p><button class="btn-confirm" onclick="openDepot(80)">MINER</button></div>
+    <div class="card"><h3>VIP 6</h3><p>Prix: 150 USDT</p><button class="btn-confirm" onclick="openDepot(150)">MINER</button></div>
+    <div class="card"><h3>VIP 7</h3><p>Prix: 300 USDT</p><button class="btn-confirm" onclick="openDepot(300)">MINER</button></div>
+
+    <div class="card locked"><h3>VIP 8</h3><p>Bientôt disponible</p></div>
+    <div class="card locked"><h3>VIP 9</h3><p>Bientôt disponible</p></div>
+
+    <hr>
+    <h3>📥 Effectuer un Dépôt</h3>
+    <div class="card">
+        <input type="number" id="montant_input" placeholder="Montant en USDT">
+        <button class="btn-confirm" onclick="sendDepot()">CONFIRMER LE DÉPÔT</button>
     </div>
-
-    <div id="page-squad" class="page">
-        <h2 style="color:#f39c12;">Inviter des Amis 👥</h2>
-        <div style="background:white; color:#333; padding:20px; border-radius:15px; margin-bottom:20px;">
-            <p>Copiez votre lien pour gagner 10%</p>
-            <input type="text" value="https://t.me/QeykoMiningBot?start=ref123" readonly class="input-field" id="reflink">
-            <button onclick="copyRef()" style="background:#3498db; color:white; border:none; padding:10px; width:100%; border-radius:10px; margin-top:10px; font-weight:bold;">Copier le lien</button>
-        </div>
-    </div>
-
-    <div id="page-history" class="page">
-        <h3>Historique 💰</h3>
-        <div style="opacity:0.5; padding:40px;">Aucune transaction enregistrée.</div>
-    </div>
-
-    <div id="m-depot" class="modal-overlay">
-        <div class="form-header"><span onclick="closeForm('m-depot')" style="cursor:pointer; margin-right:15px;">❮</span> Dépôt</div>
-        <div class="input-group"><label>Réseau principal</label><div class="net-btn">🟡 BEP20-USDT</div></div>
-        <div class="input-group">
-            <label>Adresse de dépôt</label>
-            <input type="text" class="input-field" value="0x7fD50dAAfeA0a8Df3E4860ECC81939fFBaa11396" id="wallet" readonly>
-            <button onclick="copyAddr()" style="color:#9c126d; background:none; border:none; font-weight:bold; margin-top:5px; cursor:pointer;">Copier l'adresse</button>
-        </div>
-        <div class="input-group"><label>Montant du dépôt</label><input type="number" id="dep-amt" class="input-field" placeholder="Montant USDT"></div>
-        <button class="confirm-btn" onclick="sendDepot()">CONFIRMER LE DÉPÔT</button>
-    </div>
-
-    <div id="m-retrait" class="modal-overlay">
-        <div class="form-header"><span onclick="closeForm('m-retrait')" style="cursor:pointer; margin-right:15px;">❮</span> Retrait</div>
-        <div class="input-group"><label>Réseau principal</label><div class="net-btn">🟡 BEP20-USDT</div></div>
-        <div class="input-group"><label>Adresse de retrait</label><input type="text" id="ret-addr" class="input-field" placeholder="Votre adresse BEP20"></div>
-        <div class="input-group"><label>Montant du retrait</label><input type="number" id="ret-amt" class="input-field" placeholder="Montant USDT"></div>
-        <button class="confirm-btn" onclick="sendRetrait()">CONFIRMER LE RETRAIT</button>
-    </div>
-
-    <nav class="bottom-nav">
-        <div class="nav-item active" onclick="showPage('page-mine')">🏠<br>Maison</div>
-        <div class="nav-item" onclick="showPage('page-squad')">👥<br>Amis</div>
-        <div class="nav-item" onclick="showPage('page-history')">💰<br>Historique</div>
-    </nav>
 
     <script>
-        // Timer 24h
-        let seconds = 86400;
-        setInterval(() => {
-            seconds--;
-            let h = Math.floor(seconds / 3600);
-            let m = Math.floor((seconds % 3600) / 60);
-            let s = seconds % 60;
-            document.getElementById('timer').innerText = `${h}:${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
-            if(seconds <= 0) seconds = 86400;
-        }, 1000);
-
-        function showPage(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-        }
-
-        function openForm(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeForm(id) { document.getElementById(id).style.display = 'none'; }
-        function copyAddr() { alert("Adresse copiée !"); }
-        function copyRef() { alert("Lien copié !"); }
-
+        // Pou voye montan depo a bay bot la
         function sendDepot() {
-            let val = document.getElementById('dep-amt').value;
-            if(!val) return alert("Saisir un montant");
-            window.location.href = `https://t.me/QeykoMiningBot?start=depot_${val}`;
+            let montant = document.getElementById('montant_input').value;
+            if(!montant || montant <= 0) { alert("Saisir un montant"); return; }
+            window.location.href = "https://t.me/QeykoMiningBot?start=depot_" + montant;
         }
 
-        function sendRetrait() {
-            let amt = document.getElementById('ret-amt').value;
-            let adr = document.getElementById('ret-addr').value;
-            if(!amt || !adr) return alert("Remplir tous les champs");
-            window.location.href = `https://t.me/QeykoMiningBot?start=retrait_${amt}_${adr}`;
+        // Pou bouton MINER yo (voye moun nan dirèk nan depo)
+        function openDepot(prix) {
+            window.location.href = "https://t.me/QeykoMiningBot?start=depot_" + prix;
         }
-        
-        function buy(n) { alert("Solde insuffisant pour VIP " + n); }
     </script>
 </body>
 </html>
-<button type="button" class="btn-confirm" onclick="sendDepot()">CONFIRMER LE DÉPÔT</button>
-
-
