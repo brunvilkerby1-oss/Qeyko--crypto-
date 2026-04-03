@@ -7,46 +7,53 @@
     <title>Qeyko Crypto Mining</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #12011a; color: white; text-align: center; margin: 0; padding: 20px; }
-        .card { background: #1e0229; border: 1px solid #d48806; border-radius: 15px; padding: 15px; margin-bottom: 15px; }
-        .btn-confirm { background-color: #9c106b; color: white; border: none; padding: 10px 20px; border-radius: 20px; width: 100%; cursor: pointer; font-weight: bold; margin-top: 10px; }
-        input { width: 80%; padding: 10px; border-radius: 10px; border: none; margin-top: 10px; text-align: center; }
-        .locked { opacity: 0.5; border: 1px solid #555; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0f0216; color: white; text-align: center; margin: 0; padding: 20px; }
+        .card { background: #1a0426; border: 1px solid #ff9900; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.5); }
+        .btn-confirm { background: linear-gradient(135deg, #9c106b, #5a0a3d); color: white; border: none; padding: 12px; border-radius: 25px; width: 100%; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.3s; }
+        .btn-confirm:active { transform: scale(0.98); }
+        input { width: 85%; padding: 12px; border-radius: 10px; border: none; margin-bottom: 10px; text-align: center; font-size: 16px; background: #2d0b40; color: white; }
+        .locked { opacity: 0.4; border: 1px dashed #777; }
+        h2 { color: #ff9900; }
     </style>
 </head>
 <body>
 
-    <h2>💎 Interface de Minage VIP</h2>
+    <h2>💎 VIP MINING SYSTEM</h2>
 
-    <div class="card"><h3>VIP 1</h3><p>Prix: 6 USDT</p><button class="btn-confirm" onclick="openDepot(6)">MINER</button></div>
-    <div class="card"><h3>VIP 2</h3><p>Prix: 10 USDT</p><button class="btn-confirm" onclick="openDepot(10)">MINER</button></div>
-    <div class="card"><h3>VIP 3</h3><p>Prix: 20 USDT</p><button class="btn-confirm" onclick="openDepot(20)">MINER</button></div>
-    <div class="card"><h3>VIP 4</h3><p>Prix: 45 USDT</p><button class="btn-confirm" onclick="openDepot(45)">MINER</button></div>
-    <div class="card"><h3>VIP 5</h3><p>Prix: 80 USDT</p><button class="btn-confirm" onclick="openDepot(80)">MINER</button></div>
-    <div class="card"><h3>VIP 6</h3><p>Prix: 150 USDT</p><button class="btn-confirm" onclick="openDepot(150)">MINER</button></div>
-    <div class="card"><h3>VIP 7</h3><p>Prix: 300 USDT</p><button class="btn-confirm" onclick="openDepot(300)">MINER</button></div>
+    <div class="card"><h3>VIP 1</h3><p>Prix: 6 USDT</p><button class="btn-confirm" onclick="buyVip(6)">MINER</button></div>
+    <div class="card"><h3>VIP 2</h3><p>Prix: 10 USDT</p><button class="btn-confirm" onclick="buyVip(10)">MINER</button></div>
+    <div class="card"><h3>VIP 3</h3><p>Prix: 20 USDT</p><button class="btn-confirm" onclick="buyVip(20)">MINER</button></div>
+    <div class="card"><h3>VIP 4</h3><p>Prix: 45 USDT</p><button class="btn-confirm" onclick="buyVip(45)">MINER</button></div>
+    <div class="card"><h3>VIP 5</h3><p>Prix: 80 USDT</p><button class="btn-confirm" onclick="buyVip(80)">MINER</button></div>
+    <div class="card"><h3>VIP 6</h3><p>Prix: 150 USDT</p><button class="btn-confirm" onclick="buyVip(150)">MINER</button></div>
+    <div class="card"><h3>VIP 7</h3><p>Prix: 300 USDT</p><button class="btn-confirm" onclick="buyVip(300)">MINER</button></div>
 
     <div class="card locked"><h3>VIP 8</h3><p>Bientôt disponible</p></div>
     <div class="card locked"><h3>VIP 9</h3><p>Bientôt disponible</p></div>
 
-    <hr>
-    <h3>📥 Effectuer un Dépôt</h3>
+    <hr style="border: 0.5px solid #333; margin: 25px 0;">
+
+    <h3>📥 Effectuer un Dépôt Manuel</h3>
     <div class="card">
         <input type="number" id="montant_input" placeholder="Montant en USDT">
         <button class="btn-confirm" onclick="sendDepot()">CONFIRMER LE DÉPÔT</button>
     </div>
 
     <script>
-        // Pou voye montan depo a bay bot la
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Louvri app la nèt
+
         function sendDepot() {
-            let montant = document.getElementById('montant_input').value;
-            if(!montant || montant <= 0) { alert("Saisir un montant"); return; }
-            window.location.href = "https://t.me/QeykoMiningBot?start=depot_" + montant;
+            let m = document.getElementById('montant_input').value;
+            if(!m || m <= 0) { alert("Saisir un montant"); return; }
+            // NOUVO: Voye data an silans san start pa moute
+            tg.sendData("depot_" + m); 
+            tg.close();
         }
 
-        // Pou bouton MINER yo (voye moun nan dirèk nan depo)
-        function openDepot(prix) {
-            window.location.href = "https://t.me/QeykoMiningBot?start=depot_" + prix;
+        function buyVip(prix) {
+            tg.sendData("depot_" + prix);
+            tg.close();
         }
     </script>
 </body>
