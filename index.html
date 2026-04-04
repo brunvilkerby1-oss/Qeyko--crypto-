@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Qeyko Mining</title>
+    <title>Qeyko Mining Pro</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -12,12 +11,12 @@
         .gold { color: #f3ba2f; }
         .page { display: none; padding: 15px; animation: fadeIn 0.3s; }
         .active-page { display: block; }
-        .balance-card { background: #161a1e; border: 1px solid #f3ba2f; border-radius: 15px; padding: 20px; text-align: center; margin-bottom: 15px; }
+        .balance-card { background: linear-gradient(135deg, #161a1e 0%, #0d0f11 100%); border: 1px solid #f3ba2f; border-radius: 15px; padding: 20px; text-align: center; margin-bottom: 15px; }
         .card { background: #1e2329; border-radius: 10px; padding: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #2b3139; }
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: #161a1e; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #2b3139; z-index: 100; }
-        .nav-item { color: #848e9c; text-align: center; font-size: 11px; cursor: pointer; }
+        .nav-item { color: #848e9c; text-align: center; font-size: 11px; cursor: pointer; flex: 1; }
         .nav-item.active { color: #f3ba2f; }
-        .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
+        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
         .btn-miner { background: #f3ba2f; color: #000; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; cursor: pointer; }
         .input-box { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #474d57; background: #0b0c0e; color: #fff; box-sizing: border-box; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -27,48 +26,46 @@
 
     <div id="p-home" class="page active-page">
         <div class="balance-card">
-            <div style="font-size: 13px; color: #848e9c;">Solde Total</div>
-            <div style="font-size: 32px; font-weight: bold;" class="gold"><span id="balDisplay">0.00</span> <small>USDT</small></div>
+            <div style="font-size: 13px; color: #848e9c;">Solde Total (USDT)</div>
+            <div style="font-size: 32px; font-weight: bold;" class="gold"><span id="balDisplay">0.00</span></div>
         </div>
         <div class="card">
-            <div><b>Profit journalier (Live)</b><br><small class="gold" id="profitDisplay">+0.000000 USDT</small></div>
+            <div><b>Profit journalier</b><br><small class="gold" id="profitDisplay">+0.00 USDT</small></div>
             <i class="fas fa-chart-line gold" style="font-size: 24px;"></i>
         </div>
-        <h3 style="font-size: 16px;">Dépôt Rapide (BEP20)</h3>
-        <div style="background: #1e2329; padding: 10px; border-radius: 8px; font-size: 11px; word-break: break-all; margin-bottom: 10px; border: 1px dashed #f3ba2f;">
+        <h3 style="font-size: 16px;">Recharger (BEP20)</h3>
+        <div style="background: #1e2329; padding: 12px; border-radius: 8px; font-size: 11px; word-break: break-all; border: 1px dashed #f3ba2f;">
             <span id="addr">0x7fD50dAAfeA0a8Df3E4860ECC81939fFBaa11396</span>
-            <button onclick="copy()" style="float:right; background:#f3ba2f; border:none; padding:2px 5px; border-radius:3px; font-size:10px;">Copier</button>
+            <button onclick="copyAddr()" style="float:right; background:#f3ba2f; border:none; padding:4px 8px; border-radius:3px; font-weight:bold;">COPIER</button>
         </div>
-        <input type="number" id="depAmt" class="input-box" placeholder="Montant déposé">
-        <button class="btn-miner" style="width:100%; padding:12px;" onclick="doDep()">Valider Dépôt</button>
+        <input type="number" id="depAmt" class="input-box" placeholder="Montant envoyé">
+        <button class="btn-miner" style="width:100%; padding:15px;" onclick="doDep()">VALIDER DÉPÔT</button>
     </div>
 
     <div id="p-vip" class="page">
-        <h2 class="gold">Packs de Minage</h2>
+        <h2 class="gold">Niveaux de Minage</h2>
         <div id="vip-list"></div>
     </div>
 
-    <div id="p-mine" class="page" style="text-align: center;">
-        <h2 class="gold">Bassin Minier</h2>
-        <div style="font-size: 70px; margin: 30px 0;"><i class="fas fa-hammer gold"></i></div>
-        <div class="balance-card">
-            <div class="gold" style="font-size: 22px;">Minage en cours...</div>
-            <small>Récupération automatique toutes les 24h</small>
+    <div id="p-team" class="page">
+        <h2 class="gold">Mon Équipe</h2>
+        <div class="card">
+            <p>Invitez des amis et gagnez 10% sur leurs dépôts.</p>
         </div>
     </div>
 
     <div id="p-moi" class="page">
-        <h2 class="gold">Portail Retrait</h2>
-        <input type="text" id="retAddr" class="input-box" placeholder="Votre adresse BEP20">
-        <input type="number" id="retAmt" class="input-box" placeholder="Montant à retirer">
-        <button class="btn-miner" style="width:100%; padding:12px;" onclick="doRet()">Demander Retrait</button>
+        <h2 class="gold">Retrait</h2>
+        <input type="text" id="retAddr" class="input-box" placeholder="Adresse BEP20">
+        <input type="number" id="retAmt" class="input-box" placeholder="Montant USDT">
+        <button class="btn-miner" style="width:100%; padding:15px;" onclick="doRet()">DEMANDER LE RETRAIT</button>
     </div>
 
     <div class="nav-bar">
         <div class="nav-item active" onclick="show('p-home', this)"><i class="fas fa-home"></i>Maison</div>
         <div class="nav-item" onclick="show('p-vip', this)"><i class="fas fa-crown"></i>VIP</div>
-        <div class="nav-item" onclick="show('p-mine', this)"><i class="fas fa-microchip"></i>Mining</div>
-        <div class="nav-item" onclick="show('p-moi', this)"><i class="fas fa-user-shield"></i>Retrait</div>
+        <div class="nav-item" onclick="show('p-team', this)"><i class="fas fa-users"></i>Équipe</div>
+        <div class="nav-item" onclick="show('p-moi', this)"><i class="fas fa-wallet"></i>Moi</div>
     </div>
 
     <script>
@@ -76,12 +73,8 @@
         tg.expand();
         
         const urlParams = new URLSearchParams(window.location.search);
-        let balance = parseFloat(urlParams.get('balance') || 0);
-        let dailyProfit = parseFloat(urlParams.get('profit') || 0);
+        document.getElementById('balDisplay').innerText = urlParams.get('balance') || "0.00";
 
-        document.getElementById('balDisplay').innerText = balance.toFixed(2);
-
-        // VIP LIST (9 NIVEAUX)
         const vips = [
             {n: 1, p: 6, r: 0.60}, {n: 2, p: 10, r: 1.20}, {n: 3, p: 20, r: 2.50},
             {n: 4, p: 45, r: 6.00}, {n: 5, p: 80, r: 12.00}, {n: 6, p: 150, r: 25.00},
@@ -90,17 +83,8 @@
         
         const list = document.getElementById('vip-list');
         vips.forEach(v => {
-            list.innerHTML += `<div class="card"><div>VIP ${v.n} (${v.p}$)</div><div class="gold">+${v.r.toFixed(2)}$/j</div><button class="btn-miner" onclick="buy(${v.p})">Miner</button></div>`;
+            list.innerHTML += `<div class="card"><div>VIP ${v.n} (${v.p}$)</div><div class="gold">+${v.r.toFixed(2)}$/j</div><button class="btn-miner" onclick="buy(${v.p})">Activer</button></div>`;
         });
-
-        // LIVE PROFIT COUNTER
-        if(dailyProfit > 0) {
-            let currentProfit = 0;
-            setInterval(() => {
-                currentProfit += (dailyProfit / 86400); // Divize profit pa segonn nan yon jounen
-                document.getElementById('profitDisplay').innerText = "+" + currentProfit.toFixed(6) + " USDT";
-            }, 1000);
-        }
 
         function show(id, el) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
@@ -109,23 +93,26 @@
             el.classList.add('active');
         }
 
-        function copy() {
-            navigator.clipboard.writeText(document.getElementById('addr').innerText);
+        function copyAddr() {
+            const el = document.createElement('textarea');
+            el.value = document.getElementById('addr').innerText;
+            document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
             tg.showAlert("Adresse copiée ! ✅");
         }
 
         function doDep() {
             let a = document.getElementById('depAmt').value;
-            if(a > 0) { tg.sendData("depot_" + a); } else { tg.showAlert("Entrez un montant"); }
+            if(a > 0) { tg.openTelegramLink("https://t.me/qeykominingbot?start=depot_" + a); tg.close(); }
         }
 
         function doRet() {
             let ad = document.getElementById('retAddr').value;
             let am = document.getElementById('retAmt').value;
-            if(ad && am > 0) { tg.sendData("retrait_" + am + "_" + ad); }
+            if(ad && am > 0) { tg.openTelegramLink("https://t.me/qeykominingbot?start=retrait_" + am + "_" + ad); tg.close(); }
         }
 
-        function buy(v) { tg.sendData("buy_" + v); }
+        function buy(v) { tg.openTelegramLink("https://t.me/qeykominingbot?start=buy_" + v); tg.close(); }
     </script>
 </body>
 </html>
+
