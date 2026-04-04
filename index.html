@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -13,7 +14,7 @@
         .active-page { display: block; }
         .balance-card { background: #161a1e; border: 1px solid #f3ba2f; border-radius: 15px; padding: 20px; text-align: center; margin-bottom: 15px; }
         .card { background: #1e2329; border-radius: 10px; padding: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #2b3139; }
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #161a1e; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #2b3139; }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #161a1e; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #2b3139; z-index: 100; }
         .nav-item { color: #848e9c; text-align: center; font-size: 11px; cursor: pointer; }
         .nav-item.active { color: #f3ba2f; }
         .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
@@ -27,10 +28,10 @@
     <div id="p-home" class="page active-page">
         <div class="balance-card">
             <div style="font-size: 13px; color: #848e9c;">Solde Total</div>
-            <div style="font-size: 32px; font-weight: bold;" class="gold"><span id="bal">0.00</span> <small>USDT</small></div>
+            <div style="font-size: 32px; font-weight: bold;" class="gold"><span id="balDisplay">0.00</span> <small>USDT</small></div>
         </div>
         <div class="card">
-            <div><b>Profit journalier</b><br><small class="gold" id="profit">+0.00 USDT</small></div>
+            <div><b>Profit journalier (Live)</b><br><small class="gold" id="profitDisplay">+0.000000 USDT</small></div>
             <i class="fas fa-chart-line gold" style="font-size: 24px;"></i>
         </div>
         <h3 style="font-size: 16px;">Dépôt Rapide (BEP20)</h3>
@@ -44,9 +45,7 @@
 
     <div id="p-vip" class="page">
         <h2 class="gold">Packs de Minage</h2>
-        <div class="card"><div>VIP 1 (6$)</div><div class="gold">+0.60$/j</div><button class="btn-miner" onclick="buy(6)">Miner</button></div>
-        <div class="card"><div>VIP 2 (10$)</div><div class="gold">+1.20$/j</div><button class="btn-miner" onclick="buy(10)">Miner</button></div>
-        <div class="card"><div>VIP 3 (20$)</div><div class="gold">+2.50$/j</div><button class="btn-miner" onclick="buy(20)">Miner</button></div>
+        <div id="vip-list"></div>
     </div>
 
     <div id="p-mine" class="page" style="text-align: center;">
@@ -54,7 +53,7 @@
         <div style="font-size: 70px; margin: 30px 0;"><i class="fas fa-hammer gold"></i></div>
         <div class="balance-card">
             <div class="gold" style="font-size: 22px;">Minage en cours...</div>
-            <small id="timer">Récupération dans 24h</small>
+            <small>Récupération automatique toutes les 24h</small>
         </div>
     </div>
 
@@ -62,7 +61,7 @@
         <h2 class="gold">Portail Retrait</h2>
         <input type="text" id="retAddr" class="input-box" placeholder="Votre adresse BEP20">
         <input type="number" id="retAmt" class="input-box" placeholder="Montant à retirer">
-        <button class="btn-miner" style="width:100%; padding:12px; background:#0b0c0e; color:#f3ba2f; border:1px solid #f3ba2f;" onclick="doRet()">Demander Retrait</button>
+        <button class="btn-miner" style="width:100%; padding:12px;" onclick="doRet()">Demander Retrait</button>
     </div>
 
     <div class="nav-bar">
@@ -75,8 +74,33 @@
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
+        
         const urlParams = new URLSearchParams(window.location.search);
-        document.getElementById('bal').innerText = urlParams.get('balance') || "0.00";
+        let balance = parseFloat(urlParams.get('balance') || 0);
+        let dailyProfit = parseFloat(urlParams.get('profit') || 0);
+
+        document.getElementById('balDisplay').innerText = balance.toFixed(2);
+
+        // VIP LIST (9 NIVEAUX)
+        const vips = [
+            {n: 1, p: 6, r: 0.60}, {n: 2, p: 10, r: 1.20}, {n: 3, p: 20, r: 2.50},
+            {n: 4, p: 45, r: 6.00}, {n: 5, p: 80, r: 12.00}, {n: 6, p: 150, r: 25.00},
+            {n: 7, p: 300, r: 55.00}, {n: 8, p: 600, r: 120.00}, {n: 9, p: 1200, r: 250.00}
+        ];
+        
+        const list = document.getElementById('vip-list');
+        vips.forEach(v => {
+            list.innerHTML += `<div class="card"><div>VIP ${v.n} (${v.p}$)</div><div class="gold">+${v.r.toFixed(2)}$/j</div><button class="btn-miner" onclick="buy(${v.p})">Miner</button></div>`;
+        });
+
+        // LIVE PROFIT COUNTER
+        if(dailyProfit > 0) {
+            let currentProfit = 0;
+            setInterval(() => {
+                currentProfit += (dailyProfit / 86400); // Divize profit pa segonn nan yon jounen
+                document.getElementById('profitDisplay').innerText = "+" + currentProfit.toFixed(6) + " USDT";
+            }, 1000);
+        }
 
         function show(id, el) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
@@ -84,20 +108,24 @@
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
         }
+
         function copy() {
             navigator.clipboard.writeText(document.getElementById('addr').innerText);
             tg.showAlert("Adresse copiée ! ✅");
         }
-        function buy(v) { tg.openTelegramLink("https://t.me/qeykominingbot?start=depot_" + v); tg.close(); }
+
         function doDep() {
             let a = document.getElementById('depAmt').value;
-            if(a > 0) { tg.openTelegramLink("https://t.me/qeykominingbot?start=depot_" + a); tg.close(); }
+            if(a > 0) { tg.sendData("depot_" + a); } else { tg.showAlert("Entrez un montant"); }
         }
+
         function doRet() {
             let ad = document.getElementById('retAddr').value;
             let am = document.getElementById('retAmt').value;
-            if(ad && am > 0) { tg.openTelegramLink("https://t.me/qeykominingbot?start=retrait_" + am + "_" + ad); tg.close(); }
+            if(ad && am > 0) { tg.sendData("retrait_" + am + "_" + ad); }
         }
+
+        function buy(v) { tg.sendData("buy_" + v); }
     </script>
 </body>
 </html>
