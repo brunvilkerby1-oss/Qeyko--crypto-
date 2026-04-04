@@ -99,12 +99,19 @@
             document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
             tg.showAlert("Adresse copiée ! ✅");
         }
+function doDep() {
+    let a = document.getElementById('depAmt').value;
+    if(a > 0) {
+        // Sa a ap fòse bot la louvri ak tout kòmand depo a
+        let link = "https://t.me/qeykominingbot?start=depot_" + a;
+        tg.openTelegramLink(link);
+        tg.close(); // L ap fèmen Mini App la pou moun nan ka wè mesaj bot la
+    } else {
+        tg.showAlert("Veuillez entrer un montant !");
+    }
+}
 
-        function doDep() {
-            let a = document.getElementById('depAmt').value;
-            if(a > 0) { tg.openTelegramLink("https://t.me/qeykominingbot?start=depot_" + a); tg.close(); }
-        }
-
+        
         function doRet() {
             let ad = document.getElementById('retAddr').value;
             let am = document.getElementById('retAmt').value;
