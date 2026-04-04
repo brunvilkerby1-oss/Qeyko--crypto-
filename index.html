@@ -3,74 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Qeyko Crypto Mining</title>
+    <title>Smart Crypto Asset</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(180deg, #b7f8e8 0%, #e2faec 100%); margin: 0; padding: 20px; color: #2c3e50; }
-        .header { text-align: center; margin-bottom: 30px; }
-        .header h1 { font-size: 22px; color: #2c3e50; letter-spacing: 1px; }
+        body { font-family: 'Arial', sans-serif; background-color: #000000; color: #ffffff; margin: 0; padding: 15px; }
+        .gold { color: #ffcc00; }
+        .card { background: #1a1a1a; border: 1px solid #333; border-radius: 12px; padding: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .vip-info h3 { margin: 0; font-size: 16px; color: #ffcc00; }
+        .vip-info p { margin: 2px 0; font-size: 12px; color: #aaaaaa; }
+        .btn { background: #ffcc00; color: #000; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; }
         
-        /* Style VIP Cards */
-        .vip-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
-        .vip-card { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-left: 5px solid #2c3e50; position: relative; }
-        .vip-card h3 { margin: 0; color: #2c3e50; font-size: 18px; }
-        .vip-card p { margin: 5px 0; font-weight: bold; color: #40739e; }
-        .btn-miner { background: #2c3e50; color: white; border: none; padding: 10px 25px; border-radius: 20px; float: right; margin-top: -35px; cursor: pointer; font-weight: bold; }
+        .section-title { border-left: 4px solid #ffcc00; padding-left: 10px; margin: 20px 0 10px; font-size: 18px; font-weight: bold; }
         
-        /* Locked VIPs */
-        .locked { opacity: 0.6; filter: grayscale(1); border-left: 5px solid #bdc3c7; }
-        .locked-tag { font-size: 10px; background: #bdc3c7; color: white; padding: 2px 8px; border-radius: 10px; }
-
-        /* Section Dépôt */
-        .depot-section { margin-top: 40px; background: #2c3e50; color: white; padding: 20px; border-radius: 15px; text-align: center; }
-        .depot-section h2 { font-size: 18px; margin-bottom: 15px; }
-        input { width: 100%; padding: 12px; border-radius: 10px; border: none; margin-bottom: 15px; box-sizing: border-box; text-align: center; font-size: 16px; }
-        .btn-confirm { background: #b7f8e8; color: #2c3e50; border: none; padding: 15px; border-radius: 10px; width: 100%; font-weight: bold; cursor: pointer; font-size: 16px; }
+        .deposit-box { background: #111; border: 2px dashed #ffcc00; padding: 15px; border-radius: 12px; text-align: center; }
+        .address-box { background: #222; padding: 10px; border-radius: 5px; font-family: monospace; font-size: 11px; margin: 10px 0; word-break: break-all; border: 1px solid #444; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 8px; border: 1px solid #ffcc00; background: #000; color: #fff; text-align: center; }
+        .btn-main { width: 100%; padding: 12px; font-size: 16px; margin-top: 5px; }
+        .btn-retrait { background: transparent; border: 1px solid #ffcc00; color: #ffcc00; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>SMART CRYPTO ASSET</h1>
-        <p style="font-size: 12px; color: #7f8c8d;">Réseau BEP20 - Cloud Mining</p>
-    </div>
+    <h2 style="text-align:center;">🏆 <span class="gold">SMART</span> CRYPTO ASSET</h2>
 
-    <div class="vip-grid">
-        <div class="vip-card"><h3>VIP 1</h3><p>6 USDT</p><button class="btn-miner" onclick="sendToBot(6)">MINER</button></div>
-        <div class="vip-card"><h3>VIP 2</h3><p>10 USDT</p><button class="btn-miner" onclick="sendToBot(10)">MINER</button></div>
-        <div class="vip-card"><h3>VIP 3</h3><p>20 USDT</p><button class="btn-miner" onclick="sendToBot(20)">MINER</button></div>
-        <div class="vip-card"><h3>VIP 4</h3><p>45 USDT</p><button class="btn-miner" onclick="sendToBot(45)">MINER</button></div>
-        <div class="vip-card"><h3>VIP 5</h3><p>80 USDT</p><button class="btn-miner" onclick="sendToBot(80)">MINER</button></div>
-        <div class="vip-card"><h3>VIP 6</h3><p>150 USDT</p><button class="btn-miner" onclick="sendToBot(150)">MINER</button></div>
-        <div class="vip-card"><h3>VIP 7</h3><p>300 USDT</p><button class="btn-miner" onclick="sendToBot(300)">MINER</button></div>
+    <div class="section-title">PACKS DE MINAGE</div>
+    
+    <div class="card"><div class="vip-info"><h3>VIP 1</h3><p>Prix: 6 USDT | <span class="gold">Gain: 0.60$/jour</span></p></div><button class="btn" onclick="send(6)">MINER</button></div>
+    <div class="card"><div class="vip-info"><h3>VIP 2</h3><p>Prix: 10 USDT | <span class="gold">Gain: 1.20$/jour</span></p></div><button class="btn" onclick="send(10)">MINER</button></div>
+    <div class="card"><div class="vip-info"><h3>VIP 3</h3><p>Prix: 20 USDT | <span class="gold">Gain: 2.50$/jour</span></p></div><button class="btn" onclick="send(20)">MINER</button></div>
+    <div class="card"><div class="vip-info"><h3>VIP 4</h3><p>Prix: 45 USDT | <span class="gold">Gain: 6.00$/jour</span></p></div><button class="btn" onclick="send(45)">MINER</button></div>
+    <div class="card"><div class="vip-info"><h3>VIP 5</h3><p>Prix: 80 USDT | <span class="gold">Gain: 12.00$/jour</span></p></div><button class="btn" onclick="send(80)">MINER</button></div>
 
-        <div class="vip-card locked"><h3>VIP 8</h3><p>Bientôt disponible</p> <span class="locked-tag">Indisponible</span></div>
-        <div class="vip-card locked"><h3>VIP 9</h3><p>Bientôt disponible</p> <span class="locked-tag">Indisponible</span></div>
-    </div>
-
-    <div class="depot-section">
-        <h2>📥 Effectuer un Dépôt Manuel</h2>
-        <input type="number" id="amount" placeholder="Entrez le montant en USDT">
-        <button class="btn-confirm" onclick="manualDepot()">CONFIRMER LE DÉPÔT</button>
+    <div class="section-title">PORTAL FINANCIER</div>
+    
+    <div class="deposit-box">
+        <span style="font-size: 12px;">ADRESSE DE DÉPÔT (BEP20)</span>
+        <div class="address-box" id="addr">0x7fD50dAAfeA0a8Df3E4860ECC81939fFBaa11396</div>
+        <input type="number" id="amt" placeholder="Montant à déposer">
+        <button class="btn btn-main" onclick="manual()">CONFIRMER DÉPÔT</button>
+        <button class="btn btn-main btn-retrait" onclick="retrait()">DEMANDER UN RETRAIT</button>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        function sendToBot(val) {
-            // Metòd sa a ap voye kòmand lan dirèk nan bot la
-            window.location.href = "https://t.me/QeykoMiningBot?start=depot_" + val;
+        function send(v) { window.location.href = "https://t.me/QeykoMiningBot?start=depot_" + v; }
+        function manual() { 
+            let a = document.getElementById('amt').value;
+            if(a > 0) window.location.href = "https://t.me/QeykoMiningBot?start=depot_" + a;
+            else alert("Saisir un montant");
         }
-
-        function manualDepot() {
-            let v = document.getElementById('amount').value;
-            if(v > 0) {
-                window.location.href = "https://t.me/QeykoMiningBot?start=depot_" + v;
-            } else {
-                alert("Veuillez saisir un montant valide.");
-            }
-        }
+        function retrait() { window.location.href = "https://t.me/QeykoMiningBot?start=retrait"; }
     </script>
 </body>
 </html>
